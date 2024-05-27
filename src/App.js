@@ -14,6 +14,10 @@ const faqs = [
     title: "Do you ship to countries outside the EU?",
     text: "Excepturi velit laborum, perspiciatis nemo perferendis reiciendis aliquam possimus dolor sed! Dolore laborum ducimus veritatis facere molestias!",
   },
+  {
+    title: "How do we get it revised?",
+    text: "Excepturi velit laborum, perspiciatis nemo perferendis reiciendis aliquam possimus dolor sed! Dolore laborum ducimus veritatis facere molestias!",
+  },
 ];
 
 export default function App() {
@@ -25,25 +29,47 @@ export default function App() {
 }
 
 function Accordion({ data }) {
+  const [currOpen, setCurrOpen] = useState(null);
+
   return (
     <div className="accordian">
       {data.map((el, index) => (
         <AccordianItem
           title={el.title}
-          text={el.text}
           num={index}
           key={el.title}
-        />
+          currOpen={currOpen}
+          onOpen={setCurrOpen}
+        >
+          {el.text}
+        </AccordianItem>
       ))}
+
+      <AccordianItem
+        title="React Component"
+        num="8"
+        key="react"
+        currOpen={currOpen}
+        onOpen={setCurrOpen}
+      >
+        <p>Allows react developer to:</p>
+        <ul>
+          <li>Break up UI into component</li>
+          <li>Create interactive single page application.</li>
+
+          <li>Pass information using state and props</li>
+        </ul>
+      </AccordianItem>
     </div>
   );
 }
 
-function AccordianItem({ num, title, text }) {
-  const [isOpen, setIsOpen] = useState(false);
+function AccordianItem({ num, title, text, currOpen, onOpen, children }) {
+  const isOpen = num === currOpen;
 
   function handleToggle() {
-    setIsOpen((isOpen) => !isOpen);
+    //setIsOpen((isOpen) => !isOpen);
+    onOpen(num);
   }
 
   return (
@@ -51,7 +77,7 @@ function AccordianItem({ num, title, text }) {
       <p className="number">{num < 9 ? `0 ${num + 1}` : num + 1}</p>
       <p className="text">{title}</p>
       <p className="icon">{isOpen ? "-" : "+"}</p>
-      {isOpen && <div className="content-box">{text}</div>}
+      {isOpen && <div className="content-box">{children}</div>}
     </div>
   );
 }
